@@ -7,6 +7,7 @@ import org.opentest4j.AssertionFailedError;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SelectProcessor implements Processor {
     @Override
@@ -32,12 +33,20 @@ public class SelectProcessor implements Processor {
             throw new AssertionFailedError("Expected queries: " + totalQueries + " but found: " + totalQueriesData.size());
         }
 
+        var containsQuery = new AtomicBoolean(true);
+
         if (expectedQuery != null && !expectedQuery.isEmpty()) {
-            queryInformation.forEach(q -> {
+            totalQueriesData.forEach(q -> {
                 if (!q.listQueries().contains(expectedQuery)) {
-                    throw new AssertionFailedError("Expected query: " + expectedQuery + " but found: " + q.listQueries());
+                    containsQuery.set(false);
                 }
             });
+
+            if(!containsQuery.get()) {
+                throw new AssertionFailedError("Expected query: " + expectedQuery +
+                        " but not found in all queries : "
+                        + totalQueriesData.stream().map(QueryInformation::listQueries).toList());
+            }
         }
     }
 }

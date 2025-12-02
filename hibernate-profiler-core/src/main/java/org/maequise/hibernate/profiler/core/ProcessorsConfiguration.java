@@ -13,6 +13,10 @@ public final class ProcessorsConfiguration {
         PROCESSORS.put("select", new SelectProcessor());
     }
 
+    private ProcessorsConfiguration() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Map<String, Processor> getProcessors() {
         return PROCESSORS;
     }

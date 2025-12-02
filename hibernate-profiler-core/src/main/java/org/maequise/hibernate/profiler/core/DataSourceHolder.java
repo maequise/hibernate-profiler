@@ -6,14 +6,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class DataSourceHolder {
-    private static final ThreadLocal<DataSourceHolder> INSTANCE = ThreadLocal.withInitial(DataSourceHolder::new);
     private static final Map<String, List<QueryInformation>> connectionsNamed = new ConcurrentHashMap<>();
 
     private DataSourceHolder() {
-    }
-
-    public static DataSourceHolder getInstance() {
-        return INSTANCE.get();
+        throw new IllegalStateException("Utility class");
     }
 
     public static void addData(String threadName, QueryInformation information) {

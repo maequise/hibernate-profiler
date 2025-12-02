@@ -38,19 +38,13 @@ public class ProfilerConfiguration {
         return ProxyDataSourceBuilder
                 .create(dataSource)
                 .name("dataSource")
-                .listener(listener)
-                .afterQuery(((execInfo, queryInfoList) -> {
+                .listener(chainListeners)
+                /*.afterQuery(((execInfo, queryInfoList) -> {
                     var nameTh = Thread.currentThread().getName();
 
                     DataSourceHolder.addData(nameTh, new QueryInformation(nameTh, execInfo, queryInfoList));
-                }))
+                }))*/
                 .build();
-    }
-
-    @DependsOn("dataSourceProxied")
-    @Bean
-    public DataSourceHolder dataSourceHolder(DataSource dataSource) {
-       return DataSourceHolder.getInstance();
     }
 
     // use hibernate to format queries
