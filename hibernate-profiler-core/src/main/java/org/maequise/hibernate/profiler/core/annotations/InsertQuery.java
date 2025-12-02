@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface InsertQuery {
     int totalExpected() default 0;
 
+    String queryExpected() default "";
 }
