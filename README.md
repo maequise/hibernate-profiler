@@ -34,6 +34,36 @@ class RepoTest {
 }
 ```
 
+It's possible that you hit the following error: 
+
+```
+Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'jakarta.persistence.EntityManagerFactory' available
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveNamedBean(DefaultListableBeanFactory.java:1558)
+	at org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor.findDefaultEntityManagerFactory(PersistenceAnnotationBeanPostProcessor.java:584)
+	at org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor.findEntityManagerFactory(PersistenceAnnotationBeanPostProcessor.java:548)
+	at org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor$PersistenceElement.resolveEntityManager(PersistenceAnnotationBeanPostProcessor.java:713)
+	at org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor$PersistenceElement.getResourceToInject(PersistenceAnnotationBeanPostProcessor.java:686)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:270)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146)
+	at org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor.postProcessProperties(PersistenceAnnotationBeanPostProcessor.java:379)
+
+```
+
+Maybe somewhere in your codebase you have something like this: 
+
+```java
+@Repository
+public class MySuperDAO {
+    @PersistenceContext
+    private EntityManager entityManager;
+    
+    /// boilerplate code of the persistence layer
+}
+
+```
+
+It means that you need to declare an `EntityManagerFactory` in your configuration class.
+
 ### ***For the moment only the Spring integration is provided***
 
 # Requirements
