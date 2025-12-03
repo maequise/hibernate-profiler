@@ -13,11 +13,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 import javax.sql.DataSource;
 import java.util.logging.Logger;
 
 @Configuration
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class ProfilerConfiguration {
     private static final Logger LOGGER = Logger.getLogger(ProfilerConfiguration.class.getName());
 
@@ -39,11 +42,6 @@ public class ProfilerConfiguration {
                 .create(dataSource)
                 .name("dataSource")
                 .listener(chainListeners)
-                /*.afterQuery(((execInfo, queryInfoList) -> {
-                    var nameTh = Thread.currentThread().getName();
-
-                    DataSourceHolder.addData(nameTh, new QueryInformation(nameTh, execInfo, queryInfoList));
-                }))*/
                 .build();
     }
 

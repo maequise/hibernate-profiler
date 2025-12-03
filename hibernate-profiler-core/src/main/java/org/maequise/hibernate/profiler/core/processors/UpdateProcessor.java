@@ -24,7 +24,7 @@ public class UpdateProcessor implements Processor{
         while (iterator.hasNext()) {
             var query = iterator.next();
 
-            if(query.listQueries().stream().anyMatch(s -> !s.contains("update"))) {
+            if(query.listQueries().stream().anyMatch(s -> !s.startsWith("update"))) {
                 iterator.remove();
             }
 

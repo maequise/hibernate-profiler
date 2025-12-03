@@ -24,7 +24,7 @@ public class SelectProcessor implements Processor {
 
         while (iterator.hasNext()) {
             var query = iterator.next();
-            if(query.listQueries().stream().anyMatch(s -> (s.contains("seq") && shouldExcludeSequencesQueries)|| !s.contains("select"))) {
+            if(query.listQueries().stream().anyMatch(s -> (s.contains("seq") && shouldExcludeSequencesQueries)|| !s.startsWith("select"))) {
                 iterator.remove();
             }
         }
