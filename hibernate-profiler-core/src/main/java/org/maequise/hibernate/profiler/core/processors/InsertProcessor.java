@@ -25,11 +25,11 @@ public class InsertProcessor implements Processor {
         while(iterator.hasNext()) {
             var query = iterator.next();
 
-            if(query.listQueries().stream().anyMatch(s -> !s.contains("insert"))) {
+            if(query.listQueries().stream().anyMatch(s -> !s.startsWith("insert"))) {
                 iterator.remove();
+            }else {
+                queriesStr.addAll(query.listQueries());
             }
-
-            queriesStr.addAll(query.listQueries());
         }
 
         if(totalQueries != queries.size()) {

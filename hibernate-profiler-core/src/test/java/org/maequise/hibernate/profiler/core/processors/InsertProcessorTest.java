@@ -109,4 +109,18 @@ class InsertProcessorTest {
 
         verify(annotation).queryExpected();
     }
+
+    @Test
+    @DisplayName("Test multiple insert queries")
+    void  test_multiple_insert_queries() {
+        when(annotation.totalExpected()).thenReturn(3);
+        var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("insert into t(id, val) values(?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("insert into another_table(id, val) values(?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("insert into third_table(id, val) values(?1, ?2)")));
+
+        assertDoesNotThrow(() -> processor.process(data, annotation));
+
+        verify(annotation).queryExpected();
+    }
 }
