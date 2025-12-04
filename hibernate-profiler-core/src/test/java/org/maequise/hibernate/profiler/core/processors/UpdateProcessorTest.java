@@ -108,4 +108,18 @@ class UpdateProcessorTest {
         verify(annotation).queryExpected();
     }
 
+    @Test
+    @DisplayName("Test multiple update queries")
+    void  test_multiple_update_queries() {
+        when(annotation.totalExpected()).thenReturn(3);
+        var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update t set id = ?1 where name = ?2")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update another_table set id = ?1 where name = ?2")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update third_table set id = ?1 where name = ?2")));
+
+        assertDoesNotThrow(() -> processor.process(data, annotation));
+
+        verify(annotation).queryExpected();
+    }
+
 }
