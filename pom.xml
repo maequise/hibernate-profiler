@@ -6,7 +6,7 @@
 
     <groupId>io.github.maequise</groupId>
     <artifactId>hibernate-profiler</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Hibernate profiler (Bill of Materials)</name>
