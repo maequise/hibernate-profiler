@@ -26,24 +26,12 @@ public class UpdateProcessor implements Processor{
 
             if(query.listQueries().stream().anyMatch(s -> !s.startsWith("update"))) {
                 iterator.remove();
-            }
-
-            queryStrings.addAll(query.listQueries());
-        }
-
-        if(totalExpected != queries.size()) {
-            throw new AssertionFailedError("Expected queries: " + totalExpected + " but found: " + queryInformation.size());
-        }
-
-        var containsQuery = new AtomicBoolean(true);
-
-        if(!expectedQuery.isEmpty()) {
-            containsQuery.set(queryStrings.contains(expectedQuery));
-
-            if(!containsQuery.get()) {
-                throw new AssertionFailedError("Expected query: " + expectedQuery + " but not found in all queries : " + queryStrings);
+            } else {
+                queryStrings.addAll(query.listQueries());
             }
         }
+
+        controlData(totalExpected, expectedQuery, queryStrings);
 
     }
 }

@@ -32,18 +32,6 @@ public class InsertProcessor implements Processor {
             }
         }
 
-        if(totalQueries != queries.size()) {
-            throw new AssertionFailedError("Expected queries: " + totalQueries + " but found: " + queryInformation.size());
-        }
-
-        var containsQuery = new AtomicBoolean(true);
-
-        if(!expectedQuery.isEmpty()) {
-            containsQuery.set(queriesStr.contains(expectedQuery));
-
-            if(!containsQuery.get()) {
-                throw new AssertionFailedError("Expected query: " + expectedQuery + " but not found in all queries : " + queriesStr);
-            }
-        }
+       controlData(totalQueries, expectedQuery, queriesStr);
     }
 }
