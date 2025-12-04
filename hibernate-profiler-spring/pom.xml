@@ -12,6 +12,18 @@
     <artifactId>hibernate-profiler-spring</artifactId>
     <packaging>jar</packaging>
 
+    <name>Hibernate spring</name>
+    <description>Contains the configuration class for test.</description>
+    <url>https://github.com/maequise/hibernate-profiler</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://opensource.org/license/apache-2-0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>

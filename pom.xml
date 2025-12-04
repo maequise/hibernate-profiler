@@ -9,6 +9,18 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <name>Hibernate profiler</name>
+    <description>Test library to test the behavior of JPA queries executing through Springframework</description>
+    <url>https://github.com/maequise/hibernate-profiler</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://opensource.org/license/apache-2-0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <developers>
         <developer>
             <id>maequise</id>
@@ -29,7 +41,6 @@
     <modules>
         <module>hibernate-profiler-core</module>
         <module>hibernate-profiler-spring</module>
-        <module>hibernate-profiler-tests</module>
     </modules>
 
     <properties>
@@ -130,6 +141,12 @@
 
     <profiles>
         <profile>
+            <id>local</id>
+            <modules>
+                <module>hibernate-profiler-tests</module>
+            </modules>
+        </profile>
+        <profile>
             <id>release</id>
             <build>
                 <plugins>
@@ -194,17 +211,6 @@
                     </plugin>
                 </plugins>
             </build>
-
-            <!--<distributionManagement>
-                <snapshotRepository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-                <repository>
-                    <id>ossrh</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>-->
         </profile>
     </profiles>
 
