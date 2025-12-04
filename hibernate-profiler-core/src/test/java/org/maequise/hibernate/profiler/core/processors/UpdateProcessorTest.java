@@ -12,8 +12,7 @@ import org.opentest4j.AssertionFailedError;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -122,4 +121,22 @@ class UpdateProcessorTest {
         verify(annotation).queryExpected();
     }
 
+    @Test
+    @DisplayName("Test multiple update queries and control the assertion error output")
+    void  test_multiple_select_queries_assertion_output_control() {
+        var outputMsg = "Expected queries: 1 but found: 3 [update t set id = ?1 where name = ?2, update another_table set id = ?1 where name = ?2, update third_table set id = ?1 where name = ?2]";
+
+        when(annotation.totalExpected()).thenReturn(1);
+
+        var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update t set id = ?1 where name = ?2")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update another_table set id = ?1 where name = ?2")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update third_table set id = ?1 where name = ?2")));
+
+        var error = assertThrows(AssertionFailedError.class, () -> processor.process(data, annotation));
+
+        assertEquals(outputMsg, error.getMessage());
+
+        verify(annotation).queryExpected();
+    }
 }

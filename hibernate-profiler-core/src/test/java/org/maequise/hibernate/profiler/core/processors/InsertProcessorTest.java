@@ -12,8 +12,7 @@ import org.opentest4j.AssertionFailedError;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -120,6 +119,25 @@ class InsertProcessorTest {
                 TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("insert into third_table(id, val) values(?1, ?2)")));
 
         assertDoesNotThrow(() -> processor.process(data, annotation));
+
+        verify(annotation).queryExpected();
+    }
+
+    @Test
+    @DisplayName("Test multiple insert queries and control the assertion error output")
+    void  test_multiple_select_queries_assertion_output_control() {
+        var outputMsg = "Expected queries: 1 but found: 3 [insert into t(id, val) values(?1, ?2), insert into another_table(id, val) values(?1, ?2), insert into third_table(id, val) values(?1, ?2)]";
+
+        when(annotation.totalExpected()).thenReturn(1);
+
+        var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("insert into t(id, val) values(?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("insert into another_table(id, val) values(?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("insert into third_table(id, val) values(?1, ?2)")));
+
+        var error = assertThrows(AssertionFailedError.class, () -> processor.process(data, annotation));
+
+        assertEquals(outputMsg, error.getMessage());
 
         verify(annotation).queryExpected();
     }

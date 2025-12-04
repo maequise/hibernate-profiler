@@ -4,6 +4,7 @@ import org.maequise.hibernate.profiler.core.QueryInformation;
 import org.opentest4j.AssertionFailedError;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -12,7 +13,8 @@ public interface Processor {
 
     default void controlData(int expectedTotalQuery, String queryToControl, List<String> queries) {
         if(expectedTotalQuery != queries.size()) {
-            throw new AssertionFailedError("Expected queries: " + expectedTotalQuery + " but found: " + queries.size());
+            var msg = String.format("Expected queries: %d but found: %d %s", expectedTotalQuery, queries.size(), Arrays.toString(queries.toArray()));
+            throw new AssertionFailedError(msg);
         }
 
         var containsQuery = new AtomicBoolean(true);

@@ -6,6 +6,7 @@ import org.opentest4j.AssertionFailedError;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -13,6 +14,7 @@ public class SelectProcessor implements Processor {
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation anno) {
         var annot = (SelectQuery) anno;
+        var queriesStr = new ArrayList<String>();
 
         var totalQueries = annot.totalExpected();
         var expectedQuery = annot.queryExpected();
@@ -26,11 +28,14 @@ public class SelectProcessor implements Processor {
             var query = iterator.next();
             if(query.listQueries().stream().anyMatch(s -> (s.contains("seq") && shouldExcludeSequencesQueries)|| !s.startsWith("select"))) {
                 iterator.remove();
+            }else {
+                queriesStr.addAll(query.listQueries());
             }
         }
 
         if (totalQueries != totalQueriesData.size()) {
-            throw new AssertionFailedError("Expected queries: " + totalQueries + " but found: " + totalQueriesData.size());
+            var msg = String.format("Expected queries: %d but found: %d %s", totalQueries, totalQueriesData.size(), Arrays.toString(queriesStr.toArray()));
+            throw new AssertionFailedError(msg);
         }
 
         var containsQuery = new AtomicBoolean(true);
