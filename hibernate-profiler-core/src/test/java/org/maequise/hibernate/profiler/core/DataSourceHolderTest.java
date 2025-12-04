@@ -54,7 +54,7 @@ class DataSourceHolderTest {
         var operations = Stream.generate(() -> (Runnable) () -> {
                     var currentThread = Thread.currentThread();
                     currentThread.setName("test");
-                    DataSourceHolder.addData("test", TestUtils.createQueryInformation("test", null, new QueryInfo("test " + currentThread.getId())));
+                    DataSourceHolder.addData("test", TestUtils.createQueryInformation("test", null, new QueryInfo("test " + currentThread.threadId())));
                     count.countDown();
                 }).limit(20)
                 .toList();
