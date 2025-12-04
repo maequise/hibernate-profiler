@@ -9,8 +9,8 @@
     <version>0.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Hibernate profiler</name>
-    <description>Test library to test the behavior of JPA queries executing through Springframework</description>
+    <name>Hibernate profiler (Bill of Materials)</name>
+    <description>Hibernate Profiler (Bill of Materials)</description>
     <url>https://github.com/maequise/hibernate-profiler</url>
 
     <licenses>

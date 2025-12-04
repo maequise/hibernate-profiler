@@ -12,8 +12,8 @@
     <artifactId>hibernate-profiler-spring</artifactId>
     <packaging>jar</packaging>
 
-    <name>Hibernate spring</name>
-    <description>Contains the configuration class for test.</description>
+    <name>Hibernate Profiler Spring configuration</name>
+    <description>Hibernate Profiler Spring configuration</description>
     <url>https://github.com/maequise/hibernate-profiler</url>
 
     <licenses>

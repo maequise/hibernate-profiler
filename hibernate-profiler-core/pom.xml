@@ -12,10 +12,8 @@
     <artifactId>hibernate-profiler-core</artifactId>
     <packaging>jar</packaging>
 
-    <name>hibernate-profiler-core</name>
-    <description>
-        Contains the main logic of the tool
-    </description>
+    <name>Hibernate profiler core</name>
+    <description>Hibernate profiler core</description>
 
     <url>https://github.com/maequise/hibernate-profiler</url>
 
