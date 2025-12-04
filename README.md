@@ -1,4 +1,7 @@
 <div align="center">
+<img src="https://sonarcloud.io/api/project_badges/measure?project=maequise_hibernate-profiler&metric=alert_status" />
+<img src="https://sonarcloud.io/api/project_badges/measure?project=maequise_hibernate-profiler&metric=coverage" />
+<img src="https://sonarcloud.io/api/project_badges/measure?project=maequise_hibernate-profiler&metric=security_rating" />
     <div>
         <blockquote>Hibernate Profiler is a testing library for Spring Boot application to quickly evaluate and improve queries performed by Hibernate</blockquote>
     </div>
