@@ -10,6 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/// Implementation to control the `Select` statements
+///
+/// @author maequise
+/// @since 0.1.0
 public class SelectProcessor implements Processor {
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation anno) {

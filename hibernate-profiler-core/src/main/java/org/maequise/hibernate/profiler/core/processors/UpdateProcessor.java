@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/// Implementation to control the `Update` statements
+///
+/// @author maequise
+/// @since 0.1.0
 public class UpdateProcessor implements Processor{
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation annotation) {

@@ -5,6 +5,11 @@ import net.ttddyy.dsproxy.QueryInfo;
 
 import java.util.List;
 
+/// Record class to construct data coming from the [net.ttddyy.dsproxy.support.ProxyDataSource] listener
+///
+/// @param threadName of the current test execution
+/// @param executionInfo coming from [net.ttddyy.dsproxy.listener.QueryExecutionListener]
+/// @param queryInfoList coming from [net.ttddyy.dsproxy.listener.QueryExecutionListener]
 public record QueryInformation(String threadName, ExecutionInfo executionInfo,
                                List<QueryInfo> queryInfoList) {
 

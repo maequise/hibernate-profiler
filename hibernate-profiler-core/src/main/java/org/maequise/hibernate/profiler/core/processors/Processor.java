@@ -8,9 +8,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/// Interface to define the contract of the processor implementation to control the behavior of the annotation used
+/// Can be defined as a functional interface
+///
+/// @author maequise
+/// @since 0.1.0
+@FunctionalInterface
 public interface Processor {
+    /// Method to control the different queries performed with the annotation associated
     void process(List<QueryInformation> queryInformation, Annotation annotation);
 
+    /// Default method used to share the logic of control for different annotation with the same behavior on controls
     default void controlData(int expectedTotalQuery, String queryToControl, List<String> queries) {
         if(expectedTotalQuery != queries.size()) {
             var msg = String.format("Expected queries: %d but found: %d %s", expectedTotalQuery, queries.size(), Arrays.toString(queries.toArray()));

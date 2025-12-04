@@ -2,13 +2,15 @@ package org.maequise.hibernate.profiler.core.processors;
 
 import org.maequise.hibernate.profiler.core.QueryInformation;
 import org.maequise.hibernate.profiler.core.annotations.InsertQuery;
-import org.opentest4j.AssertionFailedError;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
+/// Implementation to control the `Insert` statements
+///
+/// @author maequise
+/// @since 0.1.0
 public class InsertProcessor implements Processor {
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation annotation) {
