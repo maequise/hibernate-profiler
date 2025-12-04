@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.maequise</groupId>
+    <groupId>io.github.maequise</groupId>
     <artifactId>hibernate-profiler</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -29,31 +29,45 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>7.0.0</spring.version>
         <datasource.proxy>1.10.1</datasource.proxy>
+        <!-- spring version -->
+        <spring.version>7.0.0</spring.version>
+        <spring.boot.version>4.0.0</spring.boot.version>
+        <!-- hibernate version -->
+        <hibernate.version>7.1.8.Final</hibernate.version>
+        <!-- test versions -->
+        <junit.version>6.0.1</junit.version>
+        <mockito.version>5.20.0</mockito.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!-- project dependencies -->
             <dependency>
-                <groupId>org.maequise</groupId>
+                <groupId>io.github.maequise</groupId>
                 <artifactId>hibernate-profiler-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.maequise</groupId>
+                <groupId>io.github.maequise</groupId>
                 <artifactId>hibernate-profiler-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.maequise</groupId>
+                <groupId>io.github.maequise</groupId>
                 <artifactId>hibernate-profiler-tests</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>net.ttddyy</groupId>
+                <artifactId>datasource-proxy</artifactId>
+                <version>${datasource.proxy}</version>
+            </dependency>
+
+            <!-- spring dependencies -->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
@@ -62,10 +76,35 @@
             </dependency>
 
             <dependency>
-                <groupId>net.ttddyy</groupId>
-                <artifactId>datasource-proxy</artifactId>
-                <version>${datasource.proxy}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>provided</scope>
             </dependency>
+
+            <!-- hibernate dependencies -->
+            <dependency>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- test dependencies -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
