@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.maequise.hibernate.profiler.core.QueryInformation;
 import org.maequise.hibernate.profiler.core.TestUtils;
-import org.maequise.hibernate.profiler.core.annotations.InsertQuery;
 import org.maequise.hibernate.profiler.core.annotations.SelectQuery;
 import org.opentest4j.AssertionFailedError;
 

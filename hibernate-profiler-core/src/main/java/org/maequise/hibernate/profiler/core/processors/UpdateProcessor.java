@@ -2,12 +2,10 @@ package org.maequise.hibernate.profiler.core.processors;
 
 import org.maequise.hibernate.profiler.core.QueryInformation;
 import org.maequise.hibernate.profiler.core.annotations.UpdateQuery;
-import org.opentest4j.AssertionFailedError;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /// Implementation to control the `Update` statements
 ///

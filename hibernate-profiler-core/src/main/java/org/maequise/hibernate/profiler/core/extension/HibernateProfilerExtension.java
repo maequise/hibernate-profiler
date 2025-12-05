@@ -1,7 +1,5 @@
 package org.maequise.hibernate.profiler.core.extension;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
