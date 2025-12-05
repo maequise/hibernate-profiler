@@ -11,13 +11,13 @@ import java.util.List;
 public class Listener implements QueryExecutionListener {
     @Override
     public void afterQuery(ExecutionInfo execInfo, List<QueryInfo> queryInfoList) {
-        var nameTh = Thread.currentThread().getName();
+        String nameTh = Thread.currentThread().getName();
 
         DataSourceHolder.addData(nameTh, new QueryInformation(nameTh, execInfo, queryInfoList));
     }
 
     @Override
     public void beforeQuery(ExecutionInfo execInfo, List<QueryInfo> queryInfoList) {
-
+        // do not perform any action before the execution of the query
     }
 }
