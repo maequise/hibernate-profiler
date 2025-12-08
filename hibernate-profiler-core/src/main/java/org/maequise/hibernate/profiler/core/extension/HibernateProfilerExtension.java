@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.maequise.hibernate.profiler.core.DataSourceHolder;
 import org.maequise.hibernate.profiler.core.ProcessorsConfiguration;
+import org.maequise.hibernate.profiler.core.annotations.DeleteQuery;
 import org.maequise.hibernate.profiler.core.annotations.InsertQuery;
 import org.maequise.hibernate.profiler.core.annotations.SelectQuery;
 import org.maequise.hibernate.profiler.core.annotations.UpdateQuery;
@@ -38,12 +39,12 @@ public class HibernateProfilerExtension implements BeforeEachCallback, AfterEach
             var queryInfoList = connectionsNamed.get(testNameMethod);
 
             for (Annotation annotation : annots) {
-                if (annotation instanceof SelectQuery sq) {
-                    PROCESSORS.get("select").process(queryInfoList, sq);
-                } else if(annotation instanceof InsertQuery iq) {
-                    PROCESSORS.get("insert").process(queryInfoList, iq);
-                } else if(annotation instanceof UpdateQuery uq){
-                    PROCESSORS.get("update").process(queryInfoList, uq);
+                switch (annotation) {
+                    case SelectQuery sq -> PROCESSORS.get("select").process(queryInfoList, sq);
+                    case InsertQuery sq -> PROCESSORS.get("insert").process(queryInfoList, sq);
+                    case UpdateQuery sq -> PROCESSORS.get("update").process(queryInfoList, sq);
+                    case DeleteQuery sq -> PROCESSORS.get("delete").process(queryInfoList, sq);
+                    default -> throw new IllegalArgumentException("Unknown annotation: " + annotation);
                 }
             }
         });
