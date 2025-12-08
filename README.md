@@ -1,11 +1,9 @@
-<div align="center">
-<img src="https://sonarcloud.io/api/project_badges/measure?project=maequise_hibernate-profiler&metric=alert_status" />
-<img src="https://sonarcloud.io/api/project_badges/measure?project=maequise_hibernate-profiler&metric=coverage" />
-<img src="https://sonarcloud.io/api/project_badges/measure?project=maequise_hibernate-profiler&metric=security_rating" />
-    <div>
-        <blockquote>Hibernate Profiler is a testing library for Spring Boot application to quickly evaluate and improve queries performed by Hibernate</blockquote>
-    </div>
-</div>
+[![][coverage img]][sonarqube url]
+[![][quality gate img]][sonarqube url]
+[![][security img]][sonarqube url]
+[![][javadoc img]][javadoc url]
+
+>Hibernate Profiler is a testing library for Spring Boot application to quickly evaluate and improve queries performed by Hibernate
 
 # Hibernate Profiler
 
@@ -71,11 +69,23 @@ It means that you need to declare an `EntityManagerFactory` in your configuratio
 
 # Requirements
 
-- JDK 17+
+- JDK 21+
 - Spring (Spring framework 6+, Spring boot 3.x+)
 
 # Maven 
 
-TODO
+```xml
+<dependency>
+    <groupId>io.github.maequise</groupId>
+    <artifactId>hibernate-profiler-spring</artifactId>
+    <version>0.2.0</version>
+</dependency>
 
-# 
+```
+#
+[sonarqube url]:https://sonarcloud.io/summary/new_code?id=maequise_hibernate-profiler
+[quality gate img]:https://sonarcloud.io/api/project_badges/measure?project=maequise_hibernate-profiler&metric=alert_status
+[coverage img]:https://sonarcloud.io/api/project_badges/measure?project=maequise_hibernate-profiler&metric=coverage
+[security img]:https://sonarcloud.io/api/project_badges/measure?project=maequise_hibernate-profiler&metric=security_rating
+[javadoc img]:https://javadoc.io/badge2/io.github.maequise/hibernate-profiler-core/javadoc.svg
+[javadoc url]:https://javadoc.io/doc/io.github.maequise/hibernate-profiler-core
