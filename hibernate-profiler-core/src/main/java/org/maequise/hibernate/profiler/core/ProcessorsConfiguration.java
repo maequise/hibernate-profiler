@@ -1,9 +1,6 @@
 package org.maequise.hibernate.profiler.core;
 
-import org.maequise.hibernate.profiler.core.processors.InsertProcessor;
-import org.maequise.hibernate.profiler.core.processors.Processor;
-import org.maequise.hibernate.profiler.core.processors.SelectProcessor;
-import org.maequise.hibernate.profiler.core.processors.UpdateProcessor;
+import org.maequise.hibernate.profiler.core.processors.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +14,7 @@ public final class ProcessorsConfiguration {
         PROCESSORS.put("select", new SelectProcessor());
         PROCESSORS.put("insert", new InsertProcessor());
         PROCESSORS.put("update", new UpdateProcessor());
+        PROCESSORS.put("delete", new DeleteProcessor());
     }
 
     private ProcessorsConfiguration() {

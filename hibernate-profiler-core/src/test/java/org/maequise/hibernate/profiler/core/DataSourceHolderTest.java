@@ -48,30 +48,32 @@ class DataSourceHolderTest {
     @Test
     @DisplayName("Test concurrency insert")
     void test_concurrency_insert() throws InterruptedException {
-        var count = new CountDownLatch(20);
-        var executor = Executors.newFixedThreadPool(5);
+        try (var executor = Executors.newFixedThreadPool(5)) {
+            var count = new CountDownLatch(20);
 
-        var operations = Stream.generate(() -> (Runnable) () -> {
-                    var currentThread = Thread.currentThread();
-                    currentThread.setName("test");
-                    DataSourceHolder.addData("test", TestUtils.createQueryInformation("test", null, new QueryInfo("test " + currentThread.threadId())));
-                    count.countDown();
-                }).limit(20)
-                .toList();
+            var operations = Stream.generate(() -> (Runnable) () -> {
+                        var currentThread = Thread.currentThread();
+                        currentThread.setName("test");
+                        DataSourceHolder.addData("test", TestUtils.createQueryInformation("test", null, new QueryInfo("test " + currentThread.threadId())));
+                        count.countDown();
+                    }).limit(20)
+                    .toList();
 
 
-        for (var ope : operations) {
-            executor.execute(ope);
+            for (var ope : operations) {
+                executor.execute(ope);
+            }
+
+            //trick to wait before launch the test assertions
+            count.await();
+
+            var connectionsKnown = DataSourceHolder.getConnectionsNamed();
+            assertNotNull(connectionsKnown);
+            assertNotNull(connectionsKnown.get("test"));
+            assertEquals(1, connectionsKnown.size());
+            assertEquals(20, connectionsKnown.get("test").size());
         }
 
-        //trick to wait before launch the test assertions
-        count.await();
-
-        var connectionsKnown = DataSourceHolder.getConnectionsNamed();
-        assertNotNull(connectionsKnown);
-        assertNotNull(connectionsKnown.get("test"));
-        assertEquals(1, connectionsKnown.size());
-        assertEquals(20, connectionsKnown.get("test").size());
     }
 
 }
