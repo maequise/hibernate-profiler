@@ -12,7 +12,7 @@ import java.util.List;
 ///
 /// @author maequise
 /// @since 0.2.1
-public class DeleteProcessor implements Processor {
+public final class DeleteProcessor implements Processor {
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation annotation) {
         var annot = (DeleteQuery) annotation;

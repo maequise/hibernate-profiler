@@ -13,8 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 ///
 /// @author maequise
 /// @since 0.1.0
-@FunctionalInterface
-public interface Processor {
+public sealed interface Processor permits SelectProcessor, InsertProcessor, UpdateProcessor, DeleteProcessor {
     /// Method to control the different queries performed with the annotation associated
     void process(List<QueryInformation> queryInformation, Annotation annotation);
 

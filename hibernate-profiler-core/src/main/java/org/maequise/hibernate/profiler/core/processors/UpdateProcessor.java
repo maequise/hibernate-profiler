@@ -11,7 +11,7 @@ import java.util.List;
 ///
 /// @author maequise
 /// @since 0.1.0
-public class UpdateProcessor implements Processor{
+public final class UpdateProcessor implements Processor{
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation annotation) {
         var annot = (UpdateQuery) annotation;

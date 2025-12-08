@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 ///
 /// @author maequise
 /// @since 0.1.0
-public class SelectProcessor implements Processor {
+public final class SelectProcessor implements Processor {
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation anno) {
         var annot = (SelectQuery) anno;
