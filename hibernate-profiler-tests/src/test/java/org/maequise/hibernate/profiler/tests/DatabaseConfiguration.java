@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 @TestConfiguration
 @Import(ProfilerConfiguration.class)
 @EntityScan("org.maequise.hibernate.profiler.tests.entities")
-@EnableJpaRepositories("org.maequise.hibernate.profiler.tests.repositories")
+
 public class DatabaseConfiguration {
     @Bean
     public DataSource dataSource() {

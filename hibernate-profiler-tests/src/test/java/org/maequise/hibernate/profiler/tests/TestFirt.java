@@ -18,7 +18,7 @@ class TestFirt {
     private TestRepository testRepository;
 
     @Test
-    @SelectQuery(totalExpected = 1)
+    @SelectQuery(totalExpected = 10)
     void test() {
         var t = new TestEntity();
 
