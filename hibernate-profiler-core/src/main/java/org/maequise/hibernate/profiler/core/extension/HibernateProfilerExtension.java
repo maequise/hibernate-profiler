@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.maequise.hibernate.profiler.core.DataSourceHolder;
 import org.maequise.hibernate.profiler.core.ProcessorsConfiguration;
+import org.maequise.hibernate.profiler.core.QueryInformation;
 import org.maequise.hibernate.profiler.core.annotations.DeleteQuery;
 import org.maequise.hibernate.profiler.core.annotations.InsertQuery;
 import org.maequise.hibernate.profiler.core.annotations.SelectQuery;
@@ -12,6 +13,7 @@ import org.maequise.hibernate.profiler.core.annotations.UpdateQuery;
 import org.maequise.hibernate.profiler.core.processors.Processor;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.Map;
 
 /// Junit extension to use in the test classes to apply the different controls to perform during the test methods
@@ -30,13 +32,13 @@ public class HibernateProfilerExtension implements BeforeEachCallback, AfterEach
     /// After the execution of the test, perform a control on the possible annotation and call the appropriate [Processor]
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
-        var testNameMethod = context.getTestMethod().orElseThrow().getName();
+        String testNameMethod = context.getTestMethod().orElseThrow().getName();
 
-        var connectionsNamed = DataSourceHolder.getConnectionsNamed();
+        Map<String, List<QueryInformation>> connectionsNamed = DataSourceHolder.getConnectionsNamed();
 
         context.getTestMethod().ifPresent(m -> {
             var annots = m.getAnnotations();
-            var queryInfoList = connectionsNamed.get(testNameMethod);
+            List<QueryInformation> queryInfoList = connectionsNamed.get(testNameMethod);
 
             for (Annotation annotation : annots) {
                 switch (annotation) {

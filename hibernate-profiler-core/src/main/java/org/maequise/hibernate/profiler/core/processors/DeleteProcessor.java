@@ -16,16 +16,16 @@ public final class DeleteProcessor implements Processor {
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation annotation) {
         var annot = (DeleteQuery) annotation;
-        var totalExpected = annot.totalExpected();
-        var expectedQuery = annot.queryExpected();
+        int totalExpected = annot.totalExpected();
+        String expectedQuery = annot.queryExpected();
 
-        var queries = new ArrayList<>(queryInformation);
-        var queryStrings = new ArrayList<String>();
+        List<QueryInformation> queries = new ArrayList<>(queryInformation);
+        List<String> queryStrings = new ArrayList<String>();
 
         var iterator = queries.iterator();
 
         while (iterator.hasNext()) {
-            var query = iterator.next();
+            QueryInformation query = iterator.next();
 
             if(query.listQueries().stream().anyMatch(s -> !s.startsWith("delete"))) {
                 iterator.remove();
