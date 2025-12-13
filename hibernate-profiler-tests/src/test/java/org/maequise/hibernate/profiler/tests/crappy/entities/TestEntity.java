@@ -14,7 +14,7 @@ public class TestEntity {
     @Column(name = "test")
     private String test;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "testEntity", fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "testEntity", fetch = FetchType.EAGER)
     private List<SubEntity> subEntities = new ArrayList<>();
 
 
