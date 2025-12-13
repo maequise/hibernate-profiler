@@ -46,7 +46,7 @@ public class HibernateProfilerExtension implements BeforeEachCallback, AfterEach
                     case ExpectedInsertQuery sq -> PROCESSORS.get("insert").process(queryInfoList, sq);
                     case ExpectedUpdateQuery sq -> PROCESSORS.get("update").process(queryInfoList, sq);
                     case ExpectedDeleteQuery sq -> PROCESSORS.get("delete").process(queryInfoList, sq);
-                    default -> throw new IllegalArgumentException("Unknown annotation: " + annotation);
+                    default -> {}
                 }
             }
         });
