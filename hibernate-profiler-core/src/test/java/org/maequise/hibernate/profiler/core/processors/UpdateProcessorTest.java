@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.maequise.hibernate.profiler.core.TestUtils;
-import org.maequise.hibernate.profiler.core.annotations.UpdateQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedUpdateQuery;
 import org.opentest4j.AssertionFailedError;
 
 import java.util.List;
@@ -17,11 +17,11 @@ import static org.mockito.Mockito.*;
 
 class UpdateProcessorTest {
     private Processor processor;
-    private UpdateQuery annotation;
+    private ExpectedUpdateQuery annotation;
 
     @BeforeEach
     void setUp() {
-        annotation = mock(UpdateQuery.class);
+        annotation = mock(ExpectedUpdateQuery.class);
         when(annotation.queryExpected()).thenReturn("");
         processor = new UpdateProcessor();
     }
@@ -30,7 +30,7 @@ class UpdateProcessorTest {
     @ValueSource(ints = {1, 2, 3, 4, 5})
     @DisplayName("Test behavior of update query")
     void test_behavior_of_update_query(int expected) {
-        when(annotation.totalExpected()).thenReturn(expected);
+        when(annotation.value()).thenReturn(expected);
 
         var data = Stream.generate(() -> TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update table set column = ?1 where id = ?2")))
                 .limit(expected)
@@ -38,14 +38,14 @@ class UpdateProcessorTest {
 
         assertDoesNotThrow(() -> processor.process(data, annotation));
 
-        verify(annotation).totalExpected();
+        verify(annotation).value();
     }
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
     @DisplayName("Test behavior of insert annotation")
     void test_behavior_of_insert_annotation_with_errors(int expected) {
-        when(annotation.totalExpected()).thenReturn(expected + 1);
+        when(annotation.value()).thenReturn(expected + 1);
 
         var data = Stream
                 .generate(() -> {
@@ -61,26 +61,26 @@ class UpdateProcessorTest {
 
         assertThrows(AssertionFailedError.class, () -> processor.process(data, annotation));
 
-        verify(annotation).totalExpected();
+        verify(annotation).value();
     }
 
     @Test
     @DisplayName("Test that the queries controlled are update queries")
     void test_that_the_queries_controlled_are_insert_queries() {
-        when(annotation.totalExpected()).thenReturn(1);
+        when(annotation.value()).thenReturn(1);
 
         var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
                 TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update table_name set id = ?1")));
 
         assertDoesNotThrow(() -> processor.process(data, annotation));
 
-        verify(annotation).totalExpected();
+        verify(annotation).value();
     }
 
     @Test
     @DisplayName("Test that the update query is equals to the provided one")
     void test_that_the_inserted_query_is_equals_to_the_provided_one() {
-        when(annotation.totalExpected()).thenReturn(1);
+        when(annotation.value()).thenReturn(1);
         when(annotation.queryExpected()).thenReturn("update table_name set id = ?1");
 
         var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
@@ -94,7 +94,7 @@ class UpdateProcessorTest {
     @Test
     @DisplayName("Test that the update query is not equals to the provided one")
     void test_that_the_inserted_query_is_not_equals_to_the_provided_one() {
-        when(annotation.totalExpected()).thenReturn(1);
+        when(annotation.value()).thenReturn(1);
         when(annotation.queryExpected()).thenReturn("update table_name set id = ?1, set value = ?2");
 
         var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
@@ -108,7 +108,7 @@ class UpdateProcessorTest {
     @Test
     @DisplayName("Test multiple update queries")
     void  test_multiple_update_queries() {
-        when(annotation.totalExpected()).thenReturn(3);
+        when(annotation.value()).thenReturn(3);
         var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
                 TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update t set id = ?1 where name = ?2")),
                 TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update another_table set id = ?1 where name = ?2")),
@@ -124,7 +124,7 @@ class UpdateProcessorTest {
     void  test_multiple_select_queries_assertion_output_control() {
         var outputMsg = "Expected queries: 1 but found: 3 [update t set id = ?1 where name = ?2, update another_table set id = ?1 where name = ?2, update third_table set id = ?1 where name = ?2]";
 
-        when(annotation.totalExpected()).thenReturn(1);
+        when(annotation.value()).thenReturn(1);
 
         var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
                 TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update t set id = ?1 where name = ?2")),

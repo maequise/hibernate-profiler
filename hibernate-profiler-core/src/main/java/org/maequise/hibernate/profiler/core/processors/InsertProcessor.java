@@ -1,7 +1,7 @@
 package org.maequise.hibernate.profiler.core.processors;
 
 import org.maequise.hibernate.profiler.core.QueryInformation;
-import org.maequise.hibernate.profiler.core.annotations.InsertQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedInsertQuery;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -14,10 +14,10 @@ import java.util.List;
 public final class InsertProcessor implements Processor {
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation annotation) {
-        var annot = (InsertQuery) annotation;
+        var annot = (ExpectedInsertQuery) annotation;
         var queriesStr = new ArrayList<String>();
 
-        var totalQueries = annot.totalExpected();
+        var totalQueries = annot.value();
         var expectedQuery = annot.queryExpected();
 
         var queries = new ArrayList<>(queryInformation);

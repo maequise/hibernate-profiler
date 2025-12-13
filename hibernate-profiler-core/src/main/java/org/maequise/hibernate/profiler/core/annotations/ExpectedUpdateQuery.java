@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
 ///
 /// The annotation can be combined by other tool annotation:
 ///
-/// - [InsertQuery]
-/// - [SelectQuery]
+/// - [ExpectedInsertQuery]
+/// - [ExpectedSelectQuery]
 ///
 /// ```java
 ///     @Test
@@ -26,10 +26,10 @@ import java.lang.annotation.Target;
 /// @since 0.1.0
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface UpdateQuery {
+public @interface ExpectedUpdateQuery {
     /// Total of update queries expected
     /// By default none is expected
-    int totalExpected() default 0;
+    int value() default 0;
 
     /// Indicate the exact update query that is performed
     String queryExpected() default "";

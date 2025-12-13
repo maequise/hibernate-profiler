@@ -6,10 +6,10 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.maequise.hibernate.profiler.core.DataSourceHolder;
 import org.maequise.hibernate.profiler.core.ProcessorsConfiguration;
 import org.maequise.hibernate.profiler.core.QueryInformation;
-import org.maequise.hibernate.profiler.core.annotations.DeleteQuery;
-import org.maequise.hibernate.profiler.core.annotations.InsertQuery;
-import org.maequise.hibernate.profiler.core.annotations.SelectQuery;
-import org.maequise.hibernate.profiler.core.annotations.UpdateQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedDeleteQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedInsertQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedSelectQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedUpdateQuery;
 import org.maequise.hibernate.profiler.core.processors.Processor;
 
 import java.lang.annotation.Annotation;
@@ -42,10 +42,10 @@ public class HibernateProfilerExtension implements BeforeEachCallback, AfterEach
 
             for (Annotation annotation : annots) {
                 switch (annotation) {
-                    case SelectQuery sq -> PROCESSORS.get("select").process(queryInfoList, sq);
-                    case InsertQuery sq -> PROCESSORS.get("insert").process(queryInfoList, sq);
-                    case UpdateQuery sq -> PROCESSORS.get("update").process(queryInfoList, sq);
-                    case DeleteQuery sq -> PROCESSORS.get("delete").process(queryInfoList, sq);
+                    case ExpectedSelectQuery sq -> PROCESSORS.get("select").process(queryInfoList, sq);
+                    case ExpectedInsertQuery sq -> PROCESSORS.get("insert").process(queryInfoList, sq);
+                    case ExpectedUpdateQuery sq -> PROCESSORS.get("update").process(queryInfoList, sq);
+                    case ExpectedDeleteQuery sq -> PROCESSORS.get("delete").process(queryInfoList, sq);
                     default -> throw new IllegalArgumentException("Unknown annotation: " + annotation);
                 }
             }
