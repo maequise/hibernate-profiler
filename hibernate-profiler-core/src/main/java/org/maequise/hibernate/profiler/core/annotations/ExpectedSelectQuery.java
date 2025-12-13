@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
 ///
 /// The annotation can be combined by other tool annotation:
 ///
-/// - [InsertQuery]
-/// - [UpdateQuery]
+/// - [ExpectedInsertQuery]
+/// - [ExpectedUpdateQuery]
 ///
 /// ```java
 ///     @Test
@@ -23,16 +23,16 @@ import java.lang.annotation.Target;
 /// In the previous sample we assume that the test should not perform any select query, otherwise an [org.opentest4j.AssertionFailedError] will be thrown
 ///
 /// In some case, and depending on the `database` used, a select query can be performed to get the generated id
-/// to prevent this such case use the annotation with the [SelectQuery#excludeSequenceQueries()]
+/// to prevent this such case use the annotation with the [ExpectedSelectQuery#excludeSequenceQueries()]
 ///
 /// @author maequise
 /// @since 0.1.0
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SelectQuery {
+public @interface ExpectedSelectQuery {
     /// Indicate the number of select queries are expected
     /// By default 0 no select query is expected
-    int totalExpected() default 0;
+    int value() default 0;
 
     /// Indicate which query is expected during the select operation
     String queryExpected() default "";

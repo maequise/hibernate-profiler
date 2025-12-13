@@ -1,7 +1,7 @@
 package org.maequise.hibernate.profiler.core.processors;
 
 import org.maequise.hibernate.profiler.core.QueryInformation;
-import org.maequise.hibernate.profiler.core.annotations.SelectQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedSelectQuery;
 import org.opentest4j.AssertionFailedError;
 
 import java.lang.annotation.Annotation;
@@ -17,10 +17,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class SelectProcessor implements Processor {
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation anno) {
-        var annot = (SelectQuery) anno;
+        var annot = (ExpectedSelectQuery) anno;
         var queriesStr = new ArrayList<String>();
 
-        var totalQueries = annot.totalExpected();
+        var totalQueries = annot.value();
         var expectedQuery = annot.queryExpected();
         var shouldExcludeSequencesQueries = annot.excludeSequenceQueries();
 

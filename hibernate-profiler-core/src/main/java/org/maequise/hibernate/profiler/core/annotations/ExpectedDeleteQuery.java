@@ -5,8 +5,8 @@ package org.maequise.hibernate.profiler.core.annotations;
 ///
 /// The annotation can be combined by other tool annotation:
 ///
-/// - [SelectQuery]
-/// - [UpdateQuery]
+/// - [ExpectedSelectQuery]
+/// - [ExpectedUpdateQuery]
 ///
 /// ```java
 ///     @Test
@@ -17,10 +17,10 @@ package org.maequise.hibernate.profiler.core.annotations;
 ///
 /// In the previous sample we assume that the test should not perform any insert query, otherwise an [org.opentest4j.AssertionFailedError] will be thrown
 
-public @interface DeleteQuery {
+public @interface ExpectedDeleteQuery {
     /// Total of update queries expected
     /// By default none is expected
-    int totalExpected() default 0;
+    int value() default 0;
 
     /// Indicate the exact update query that is performed
     String queryExpected() default "";

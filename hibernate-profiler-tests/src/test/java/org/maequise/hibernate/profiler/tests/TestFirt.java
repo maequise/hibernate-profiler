@@ -2,7 +2,7 @@ package org.maequise.hibernate.profiler.tests;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.maequise.hibernate.profiler.core.annotations.SelectQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedSelectQuery;
 import org.maequise.hibernate.profiler.core.extension.HibernateProfilerExtension;
 import org.maequise.hibernate.profiler.tests.entities.TestEntity;
 import org.maequise.hibernate.profiler.tests.repositories.TestRepository;
@@ -18,7 +18,7 @@ class TestFirt {
     private TestRepository testRepository;
 
     @Test
-    @SelectQuery(totalExpected = 10)
+    @ExpectedSelectQuery(10)
     void test() {
         var t = new TestEntity();
 

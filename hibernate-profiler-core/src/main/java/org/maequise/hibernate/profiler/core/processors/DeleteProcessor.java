@@ -1,8 +1,7 @@
 package org.maequise.hibernate.profiler.core.processors;
 
 import org.maequise.hibernate.profiler.core.QueryInformation;
-import org.maequise.hibernate.profiler.core.annotations.DeleteQuery;
-import org.maequise.hibernate.profiler.core.annotations.UpdateQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedDeleteQuery;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -15,8 +14,8 @@ import java.util.List;
 public final class DeleteProcessor implements Processor {
     @Override
     public void process(List<QueryInformation> queryInformation, Annotation annotation) {
-        var annot = (DeleteQuery) annotation;
-        int totalExpected = annot.totalExpected();
+        var annot = (ExpectedDeleteQuery) annotation;
+        int totalExpected = annot.value();
         String expectedQuery = annot.queryExpected();
 
         List<QueryInformation> queries = new ArrayList<>(queryInformation);

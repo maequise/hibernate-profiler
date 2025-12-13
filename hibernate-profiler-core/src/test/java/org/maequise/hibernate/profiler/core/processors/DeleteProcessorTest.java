@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.maequise.hibernate.profiler.core.TestUtils;
-import org.maequise.hibernate.profiler.core.annotations.DeleteQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedDeleteQuery;
 import org.opentest4j.AssertionFailedError;
 
 import java.util.List;
@@ -19,12 +19,12 @@ import static org.mockito.Mockito.when;
 
 class DeleteProcessorTest {
     Processor processor;
-    DeleteQuery annotation;
+    ExpectedDeleteQuery annotation;
     
     @BeforeEach
     void setUp() {
         processor = new DeleteProcessor();
-        annotation = mock(DeleteQuery.class);
+        annotation = mock(ExpectedDeleteQuery.class);
         when(annotation.queryExpected()).thenReturn("");
     }
 
@@ -32,7 +32,7 @@ class DeleteProcessorTest {
     @ValueSource(ints = {1, 2, 3, 4, 5})
     @DisplayName("Test behavior of delete query")
     void test_behavior_of_delete_query(int expected) {
-        when(annotation.totalExpected()).thenReturn(expected);
+        when(annotation.value()).thenReturn(expected);
 
         var data = Stream.generate(() -> TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("delete table set column = ?1 where id = ?2")))
                 .limit(expected)
@@ -40,14 +40,14 @@ class DeleteProcessorTest {
 
         assertDoesNotThrow(() -> processor.process(data, annotation));
 
-        verify(annotation).totalExpected();
+        verify(annotation).value();
     }
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
     @DisplayName("Test behavior of insert annotation")
     void test_behavior_of_insert_annotation_with_errors(int expected) {
-        when(annotation.totalExpected()).thenReturn(expected + 1);
+        when(annotation.value()).thenReturn(expected + 1);
 
         var data = Stream
                 .generate(() -> {
@@ -63,26 +63,26 @@ class DeleteProcessorTest {
 
         assertThrows(AssertionFailedError.class, () -> processor.process(data, annotation));
 
-        verify(annotation).totalExpected();
+        verify(annotation).value();
     }
 
     @Test
     @DisplayName("Test that the queries controlled are delete queries")
     void test_that_the_queries_controlled_are_insert_queries() {
-        when(annotation.totalExpected()).thenReturn(1);
+        when(annotation.value()).thenReturn(1);
 
         var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
                 TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("delete table_name set id = ?1")));
 
         assertDoesNotThrow(() -> processor.process(data, annotation));
 
-        verify(annotation).totalExpected();
+        verify(annotation).value();
     }
 
     @Test
     @DisplayName("Test that the delete query is equals to the provided one")
     void test_that_the_inserted_query_is_equals_to_the_provided_one() {
-        when(annotation.totalExpected()).thenReturn(1);
+        when(annotation.value()).thenReturn(1);
         when(annotation.queryExpected()).thenReturn("delete table_name set id = ?1");
 
         var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
@@ -96,7 +96,7 @@ class DeleteProcessorTest {
     @Test
     @DisplayName("Test that the delete query is not equals to the provided one")
     void test_that_the_inserted_query_is_not_equals_to_the_provided_one() {
-        when(annotation.totalExpected()).thenReturn(1);
+        when(annotation.value()).thenReturn(1);
         when(annotation.queryExpected()).thenReturn("delete table_name set id = ?1, set value = ?2");
 
         var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
@@ -110,7 +110,7 @@ class DeleteProcessorTest {
     @Test
     @DisplayName("Test multiple delete queries")
     void  test_multiple_delete_queries() {
-        when(annotation.totalExpected()).thenReturn(3);
+        when(annotation.value()).thenReturn(3);
         var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
                 TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("delete t set id = ?1 where name = ?2")),
                 TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("delete another_table set id = ?1 where name = ?2")),
@@ -126,7 +126,7 @@ class DeleteProcessorTest {
     void  test_multiple_select_queries_assertion_output_control() {
         var outputMsg = "Expected queries: 1 but found: 3 [delete t set id = ?1 where name = ?2, delete another_table set id = ?1 where name = ?2, delete third_table set id = ?1 where name = ?2]";
 
-        when(annotation.totalExpected()).thenReturn(1);
+        when(annotation.value()).thenReturn(1);
 
         var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
                 TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("delete t set id = ?1 where name = ?2")),
