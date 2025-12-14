@@ -4,11 +4,12 @@ import jakarta.annotation.PostConstruct;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.jeasy.random.FieldPredicates;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedDeleteQuery;
 import org.maequise.hibernate.profiler.core.annotations.ExpectedInsertQuery;
 import org.maequise.hibernate.profiler.core.annotations.ExpectedSelectQuery;
+import org.maequise.hibernate.profiler.core.annotations.ExpectedUpdateQuery;
 import org.maequise.hibernate.profiler.core.extension.HibernateProfilerExtension;
 import org.maequise.hibernate.profiler.tests.crappy.CrappyConfigurationComponentScan;
 import org.maequise.hibernate.profiler.tests.crappy.DatabaseConfigurationCrappy;
@@ -30,13 +31,11 @@ class TestRepositoryCrappy {
     @Autowired
     private TestRepository testRepository;
 
-
-
     @Test
-    @DisplayName("Test fetch")
-    @ExpectedSelectQuery(21)
-    void test_select_should_be_one() {
-        testRepository.findAll();
+    @DisplayName("Test fetch by id")
+    @ExpectedSelectQuery(1)
+    void test_select_by_id_should_be_one() {
+        testRepository.findById(1L);
     }
 
     @Test
@@ -54,5 +53,14 @@ class TestRepositoryCrappy {
         entity.getSubEntities().add(subEntity);
 
         testRepository.save(entity);
+    }
+
+    @Test
+    @DisplayName("Test delete by id")
+    @ExpectedDeleteQuery(1)
+    @ExpectedSelectQuery(0)
+    @ExpectedUpdateQuery(0)
+    void test_delete_by_id() {
+        testRepository.deleteById(1L);
     }
 }
