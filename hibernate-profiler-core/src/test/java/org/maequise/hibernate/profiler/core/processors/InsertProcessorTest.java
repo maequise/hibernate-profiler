@@ -124,7 +124,7 @@ class InsertProcessorTest {
     @Test
     @DisplayName("Test multiple insert queries and control the assertion error output")
     void  test_multiple_select_queries_assertion_output_control() {
-        var outputMsg = "Expected queries: 1 but found: 3 [insert into t(id, val) values(?1, ?2), insert into another_table(id, val) values(?1, ?2), insert into third_table(id, val) values(?1, ?2)]";
+        var outputMsg = "Expected INSERT queries: 1 but found: 3 [insert into t(id, val) values(?1, ?2), insert into another_table(id, val) values(?1, ?2), insert into third_table(id, val) values(?1, ?2)]";
 
         when(annotation.value()).thenReturn(1);
 
@@ -138,5 +138,22 @@ class InsertProcessorTest {
         assertEquals(outputMsg, error.getMessage());
 
         verify(annotation).queryExpected();
+    }
+
+    @Test
+    @DisplayName("Test error message content")
+    void test_error_message_content() {
+        when(annotation.value()).thenReturn(1);
+
+        var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("insert into t(id, val) values(?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("insert into another_table(id, val) values(?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("insert into third_table(id, val) values(?1, ?2)")));
+
+        var error = assertThrows(AssertionFailedError.class, () -> processor.process(data, annotation));
+
+        assertTrue(error.getMessage().contains("INSERT"));
+
+        verify(annotation).value();
     }
 }

@@ -38,7 +38,7 @@ public final class SelectProcessor implements Processor {
         }
 
         if (totalQueries != totalQueriesData.size()) {
-            var msg = String.format("Expected queries: %d but found: %d %s", totalQueries, totalQueriesData.size(), Arrays.toString(queriesStr.toArray()));
+            var msg = String.format("Expected SELECT queries: %d but found: %d %s", totalQueries, totalQueriesData.size(), Arrays.toString(queriesStr.toArray()));
             throw new AssertionFailedError(msg);
         }
 
@@ -52,7 +52,7 @@ public final class SelectProcessor implements Processor {
             });
 
             if(!containsQuery.get()) {
-                throw new AssertionFailedError("Expected query: " + expectedQuery +
+                throw new AssertionFailedError("Expected SELECT query: " + expectedQuery +
                         " but not found in all queries : "
                         + totalQueriesData.stream().map(QueryInformation::listQueries).toList());
             }

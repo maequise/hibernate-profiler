@@ -33,7 +33,7 @@ public final class UpdateProcessor implements Processor{
             }
         }
 
-        controlData(totalExpected, expectedQuery, queryStrings);
+        controlData("UPDATE", totalExpected, expectedQuery, queryStrings);
 
     }
 }

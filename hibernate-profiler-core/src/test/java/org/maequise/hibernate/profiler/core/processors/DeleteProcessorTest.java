@@ -124,7 +124,7 @@ class DeleteProcessorTest {
     @Test
     @DisplayName("Test multiple delete queries and control the assertion error output")
     void  test_multiple_select_queries_assertion_output_control() {
-        var outputMsg = "Expected queries: 1 but found: 3 [delete t set id = ?1 where name = ?2, delete another_table set id = ?1 where name = ?2, delete third_table set id = ?1 where name = ?2]";
+        var outputMsg = "Expected DELETE queries: 1 but found: 3 [delete t set id = ?1 where name = ?2, delete another_table set id = ?1 where name = ?2, delete third_table set id = ?1 where name = ?2]";
 
         when(annotation.value()).thenReturn(1);
 
@@ -138,5 +138,22 @@ class DeleteProcessorTest {
         assertEquals(outputMsg, error.getMessage());
 
         verify(annotation).queryExpected();
+    }
+
+    @Test
+    @DisplayName("Test error message content")
+    void test_error_message_content() {
+        when(annotation.value()).thenReturn(1);
+
+        var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select t set id = ?1 where name = ?2")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update another_table set id = ?1 where name = ?2")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select third_table set id = ?1 where name = ?2")));
+
+        var error = assertThrows(AssertionFailedError.class, () -> processor.process(data, annotation));
+
+        assertTrue(error.getMessage().contains("DELETE"));
+
+        verify(annotation).value();
     }
 }
