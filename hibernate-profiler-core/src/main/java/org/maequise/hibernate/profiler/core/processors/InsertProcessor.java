@@ -34,6 +34,6 @@ public final class InsertProcessor implements Processor {
             }
         }
 
-       controlData(totalQueries, expectedQuery, queriesStr);
+       controlData("INSERT", totalQueries, expectedQuery, queriesStr);
     }
 }

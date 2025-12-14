@@ -122,7 +122,7 @@ class UpdateProcessorTest {
     @Test
     @DisplayName("Test multiple update queries and control the assertion error output")
     void  test_multiple_select_queries_assertion_output_control() {
-        var outputMsg = "Expected queries: 1 but found: 3 [update t set id = ?1 where name = ?2, update another_table set id = ?1 where name = ?2, update third_table set id = ?1 where name = ?2]";
+        var outputMsg = "Expected UPDATE queries: 1 but found: 3 [update t set id = ?1 where name = ?2, update another_table set id = ?1 where name = ?2, update third_table set id = ?1 where name = ?2]";
 
         when(annotation.value()).thenReturn(1);
 
@@ -136,5 +136,22 @@ class UpdateProcessorTest {
         assertEquals(outputMsg, error.getMessage());
 
         verify(annotation).queryExpected();
+    }
+
+    @Test
+    @DisplayName("Test error message content")
+    void test_error_message_content() {
+        when(annotation.value()).thenReturn(1);
+
+        var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update t set id = ?1 where name = ?2")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update another_table set id = ?1 where name = ?2")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update third_table set id = ?1 where name = ?2")));
+
+        var error = assertThrows(AssertionFailedError.class, () -> processor.process(data, annotation));
+
+        assertTrue(error.getMessage().contains("UPDATE"));
+
+        verify(annotation).value();
     }
 }

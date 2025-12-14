@@ -19,18 +19,25 @@ public sealed interface Processor permits SelectProcessor, InsertProcessor, Upda
 
     /// Default method used to share the logic of control for different annotation with the same behavior on controls
     default void controlData(int expectedTotalQuery, String queryToControl, List<String> queries) {
-        if(expectedTotalQuery != queries.size()) {
-            var msg = String.format("Expected queries: %d but found: %d %s", expectedTotalQuery, queries.size(), Arrays.toString(queries.toArray()));
+        controlData("", expectedTotalQuery, queryToControl, queries);
+    }
+
+    /// Default method used to share the logic of control for different annotation with the same behavior on controls
+    default void controlData(String typeOfQuery, int expectedTotalQuery, String queryToControl, List<String> queries) {
+        if (expectedTotalQuery != queries.size()) {
+            var msg = String.format("Expected %s queries: %d but found: %d %s", typeOfQuery, expectedTotalQuery, queries.size(), Arrays.toString(queries.toArray()));
             throw new AssertionFailedError(msg);
         }
 
         var containsQuery = new AtomicBoolean(true);
 
-        if(!queryToControl.isEmpty()) {
+        if (!queryToControl.isEmpty()) {
             containsQuery.set(queries.contains(queryToControl));
 
-            if(!containsQuery.get()) {
-                throw new AssertionFailedError("Expected query: " + queryToControl + " but not found in all queries : " + queries);
+            if (!containsQuery.get()) {
+                String errorMessage = String.format("Expected %s query: %s but not found in all queries %s", typeOfQuery, queryToControl, queries);
+                throw new AssertionFailedError(errorMessage);
+                //throw new AssertionFailedError("Expected query: " + queryToControl + " but not found in all queries : " + queries);
             }
         }
     }

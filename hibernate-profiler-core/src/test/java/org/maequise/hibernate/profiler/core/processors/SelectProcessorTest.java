@@ -221,7 +221,7 @@ class SelectProcessorTest {
     @Test
     @DisplayName("Test multiple select queries and control the assertion error output")
     void  test_multiple_select_queries_assertion_output_control() {
-         var outputMsg = "Expected queries: 1 but found: 3 [select into table_name(id, value) values (?1, ?2), select t set id = ?1 where name = ?2, select third_table set id = ?1 where name = ?2]";
+         var outputMsg = "Expected SELECT queries: 1 but found: 3 [select into table_name(id, value) values (?1, ?2), select t set id = ?1 where name = ?2, select third_table set id = ?1 where name = ?2]";
 
         when(annotation.value()).thenReturn(1);
 
@@ -235,6 +235,23 @@ class SelectProcessorTest {
         assertEquals(outputMsg, error.getMessage());
 
         verify(annotation).queryExpected();
+    }
+
+    @Test
+    @DisplayName("Test error message content")
+    void test_error_message_content() {
+        when(annotation.value()).thenReturn(1);
+
+        var data = List.of(TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select into table_name(id, value) values (?1, ?2)")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select t set id = ?1 where name = ?2")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("update another_table set id = ?1 where name = ?2")),
+                TestUtils.createQueryInformation(null, null, TestUtils.createQueryInfo("select third_table set id = ?1 where name = ?2")));
+
+        var error = assertThrows(AssertionFailedError.class, () -> processor.process(data, annotation));
+
+        assertTrue(error.getMessage().contains("SELECT"));
+
+        verify(annotation).value();
     }
 
     private QueryInformation createQueryInformation(String methodName, ExecutionInfo executionInfo, QueryInfo queryInfo) {

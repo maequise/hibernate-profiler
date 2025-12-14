@@ -33,6 +33,6 @@ public final class DeleteProcessor implements Processor {
             }
         }
 
-        controlData(totalExpected, expectedQuery, queryStrings);
+        controlData("DELETE", totalExpected, expectedQuery, queryStrings);
     }
 }
