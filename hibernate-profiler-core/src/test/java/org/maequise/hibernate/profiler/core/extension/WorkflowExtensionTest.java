@@ -9,10 +9,7 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.maequise.hibernate.profiler.core.DataSourceHolder;
 import org.maequise.hibernate.profiler.core.QueryInformation;
-import org.maequise.hibernate.profiler.core.annotations.ExpectedDeleteQuery;
-import org.maequise.hibernate.profiler.core.annotations.ExpectedInsertQuery;
-import org.maequise.hibernate.profiler.core.annotations.ExpectedSelectQuery;
-import org.maequise.hibernate.profiler.core.annotations.ExpectedUpdateQuery;
+import org.maequise.hibernate.profiler.core.annotations.*;
 import org.opentest4j.AssertionFailedError;
 
 import javax.swing.text.html.Option;
@@ -37,19 +34,15 @@ class WorkflowExtensionTest {
     @Test
     @DisplayName("Expect the workflow continues")
     void expect_the_workflow_continues() throws Exception {
-        ExtensionContext extensionContext = createExtensionContextMock();
-        var errors = assertThrows(AssertionFailedError.class, () -> hibernateProfilerExtension.afterEach(extensionContext));
-
-        assertNotNull(errors);
-        //assertInstanceOf(List.class, errors.getActual().getType());
-        assertEquals(3, ((List)errors.getActual().getEphemeralValue()).size());
+        ExtensionContext extensionContext = createExtensionContextMock(false);
+        assertThrows(AssertionFailedError.class, () -> hibernateProfilerExtension.afterEach(extensionContext));
     }
 
     @Disabled
     @Test
     @DisplayName("Test expectation message")
     void test_expected_message() {
-        ExtensionContext extensionContext = createExtensionContextMock();
+        ExtensionContext extensionContext = createExtensionContextMock(false);
         String errorMessageExpected = "Assertion error, expected: [] but got: []";
 
         var errors = assertThrows(AssertionFailedError.class, () -> hibernateProfilerExtension.afterEach(extensionContext));
@@ -58,14 +51,27 @@ class WorkflowExtensionTest {
         assertEquals(errorMessageExpected, errors.getMessage());
     }
 
-    private ExtensionContext createExtensionContextMock() {
+    @Test
+    @DisplayName("Test experimental feature")
+    void test_experimental_feature() {
+        ExtensionContext extensionContext = createExtensionContextMock(true);
+
+        var errors = assertThrows(AssertionFailedError.class, () -> hibernateProfilerExtension.afterEach(extensionContext));
+
+        assertNotNull(errors);
+        //assertInstanceOf(List.class, errors.getActual().getType());
+        assertEquals(3, ((List)errors.getActual().getEphemeralValue()).size());
+    }
+
+    private ExtensionContext createExtensionContextMock(boolean shouldBeExperimental) {
         //setup the test
         ExpectedSelectQuery expectedSelectQueryMock = mock(ExpectedSelectQuery.class);
         ExpectedUpdateQuery expectedUpdateQueryMock = mock(ExpectedUpdateQuery.class);
         ExpectedInsertQuery expectedInsertQueryMock = mock(ExpectedInsertQuery.class);
         ExpectedDeleteQuery expectedDeleteQueryMock = mock(ExpectedDeleteQuery.class);
+        HibernateProfilerExperimental experimental = mock(HibernateProfilerExperimental.class);
 
-        Annotation[] annotations = new Annotation[]{expectedInsertQueryMock, expectedSelectQueryMock, expectedUpdateQueryMock, expectedDeleteQueryMock};
+        Annotation[] annotations = new Annotation[]{expectedInsertQueryMock, expectedSelectQueryMock, expectedUpdateQueryMock, expectedDeleteQueryMock, experimental};
 
         ExtensionContext extensionContext = mock(ExtensionContext.class);
         Method mockMethod = mock(Method.class);
@@ -73,6 +79,7 @@ class WorkflowExtensionTest {
 
         //setup the mocks
         //setup the annotations
+        when(experimental.value()).thenReturn(shouldBeExperimental);
         when(expectedInsertQueryMock.value()).thenReturn(1);
         when(expectedUpdateQueryMock.value()).thenReturn(1);
         when(expectedSelectQueryMock.value()).thenReturn(1);
