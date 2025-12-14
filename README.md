@@ -28,7 +28,7 @@ class RepoTest {
     private Repo repository;
     
     @Test
-    @SelectQuery(totalExpected = 1)
+    @ExpectedSelectQuery(totalExpected = 1)
     void test_selectQuery() {
         repository.findAll();
     }
@@ -78,7 +78,7 @@ It means that you need to declare an `EntityManagerFactory` in your configuratio
 <dependency>
     <groupId>io.github.maequise</groupId>
     <artifactId>hibernate-profiler-spring</artifactId>
-    <version>0.2.0</version>
+    <version>LATEST</version>
 </dependency>
 
 ```

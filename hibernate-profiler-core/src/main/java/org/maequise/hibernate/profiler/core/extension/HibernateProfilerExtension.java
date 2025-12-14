@@ -6,18 +6,16 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.maequise.hibernate.profiler.core.DataSourceHolder;
 import org.maequise.hibernate.profiler.core.ProcessorsConfiguration;
 import org.maequise.hibernate.profiler.core.QueryInformation;
-import org.maequise.hibernate.profiler.core.annotations.ExpectedDeleteQuery;
-import org.maequise.hibernate.profiler.core.annotations.ExpectedInsertQuery;
-import org.maequise.hibernate.profiler.core.annotations.ExpectedSelectQuery;
-import org.maequise.hibernate.profiler.core.annotations.ExpectedUpdateQuery;
+import org.maequise.hibernate.profiler.core.annotations.*;
 import org.maequise.hibernate.profiler.core.processors.Processor;
 import org.opentest4j.AssertionFailedError;
 
 import java.lang.annotation.Annotation;
-import java.sql.Array;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /// Junit extension to use in the test classes to apply the different controls to perform during the test methods
 ///
@@ -37,53 +35,61 @@ public class HibernateProfilerExtension implements BeforeEachCallback, AfterEach
     public void afterEach(ExtensionContext context) throws Exception {
         String testNameMethod = context.getTestMethod().orElseThrow().getName();
 
+        context.getTestMethod().ifPresent(m -> processAnnotationsOfTestMethod(testNameMethod, m));
+    }
+
+    private void processAnnotationsOfTestMethod(String testNameMethod, Method method) {
+        boolean isExperimentalActivated = isExperimentalActivated(method);
+
         Map<String, List<QueryInformation>> connectionsNamed = DataSourceHolder.getConnectionsNamed();
+        Annotation[] annots = method.getAnnotations();
+        List<AssertionFailedError> errors = new ArrayList<>(4);
 
-        context.getTestMethod().ifPresent(m -> {
-            var annots = m.getAnnotations();
-            List<AssertionFailedError> errors = new ArrayList<>(4);
+        List<QueryInformation> queryInfoList = connectionsNamed.get(testNameMethod);
 
-            List<QueryInformation> queryInfoList = connectionsNamed.get(testNameMethod);
-
-            for (Annotation annotation : annots) {
-                switch (annotation) {
-                    case ExpectedSelectQuery sq -> {
-                        try {
-                            PROCESSORS.get("select").process(queryInfoList, sq);
-                        } catch (AssertionFailedError e) {
-                            errors.add(e);
-                        }
-                    }
-                    case ExpectedInsertQuery sq -> {
-                        try {
-                            PROCESSORS.get("insert").process(queryInfoList, sq);
-                        } catch (AssertionFailedError e) {
-                            errors.add(e);
-                        }
-                    }
-                    case ExpectedUpdateQuery sq -> {
-                        try {
-                            PROCESSORS.get("update").process(queryInfoList, sq);
-                        } catch (AssertionFailedError e) {
-                            errors.add(e);
-                        }
-                    }
-                    case ExpectedDeleteQuery sq -> {
-                        try {
-                            PROCESSORS.get("delete").process(queryInfoList, sq);
-                        } catch (AssertionFailedError e) {
-                            errors.add(e);
-                        }
-                    }
-                    default -> {
-                    }
+        for (Annotation annotation : annots) {
+            switch (annotation) {
+                case ExpectedSelectQuery sq ->
+                    processAnnotation("select", queryInfoList, sq, errors, isExperimentalActivated);
+                case ExpectedInsertQuery sq ->
+                        processAnnotation("insert", queryInfoList, sq, errors, isExperimentalActivated);
+                case ExpectedUpdateQuery sq ->
+                        processAnnotation("update", queryInfoList, sq, errors, isExperimentalActivated);
+                case ExpectedDeleteQuery sq ->
+                        processAnnotation("delete", queryInfoList, sq, errors, isExperimentalActivated);
+                default -> {
+                    //continue nothing to do
                 }
             }
+        }
 
-            if (!errors.isEmpty()) {
-                String errorMessage = String.format("Assertion error, expected: %s but got: %s", errors,errors);
-                throw new AssertionFailedError(errorMessage, List.of(), errors);
+        //experimental feature
+
+        if (!errors.isEmpty()) {
+            String errorMessage = String.format("Assertion error, expected: %s but got: %s", errors,errors);
+            throw new AssertionFailedError(errorMessage, List.of(), errors);
+        }
+    }
+
+    private boolean isExperimentalActivated(Method method) {
+        HibernateProfilerExperimental annotation = (HibernateProfilerExperimental) Stream.of(method.getAnnotations())
+                .filter(HibernateProfilerExperimental.class::isInstance)
+                .findFirst().orElse(null);
+
+        return annotation != null && annotation.value();
+    }
+
+    private void processAnnotation(String processorType, final List<QueryInformation> queryInfoList,
+                                                Annotation annotation,
+                                                List<AssertionFailedError> errors, boolean isExperimental) {
+        try {
+            PROCESSORS.get(processorType).process(queryInfoList, annotation);
+        }catch (AssertionFailedError e){
+            if(!isExperimental){
+                throw e;
             }
-        });
+
+            errors.add(e);
+        }
     }
 }
