@@ -11,8 +11,11 @@ import org.maequise.hibernate.profiler.core.annotations.ExpectedInsertQuery;
 import org.maequise.hibernate.profiler.core.annotations.ExpectedSelectQuery;
 import org.maequise.hibernate.profiler.core.annotations.ExpectedUpdateQuery;
 import org.maequise.hibernate.profiler.core.processors.Processor;
+import org.opentest4j.AssertionFailedError;
 
 import java.lang.annotation.Annotation;
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,16 +41,48 @@ public class HibernateProfilerExtension implements BeforeEachCallback, AfterEach
 
         context.getTestMethod().ifPresent(m -> {
             var annots = m.getAnnotations();
+            List<AssertionFailedError> errors = new ArrayList<>(4);
+
             List<QueryInformation> queryInfoList = connectionsNamed.get(testNameMethod);
 
             for (Annotation annotation : annots) {
                 switch (annotation) {
-                    case ExpectedSelectQuery sq -> PROCESSORS.get("select").process(queryInfoList, sq);
-                    case ExpectedInsertQuery sq -> PROCESSORS.get("insert").process(queryInfoList, sq);
-                    case ExpectedUpdateQuery sq -> PROCESSORS.get("update").process(queryInfoList, sq);
-                    case ExpectedDeleteQuery sq -> PROCESSORS.get("delete").process(queryInfoList, sq);
-                    default -> {}
+                    case ExpectedSelectQuery sq -> {
+                        try {
+                            PROCESSORS.get("select").process(queryInfoList, sq);
+                        } catch (AssertionFailedError e) {
+                            errors.add(e);
+                        }
+                    }
+                    case ExpectedInsertQuery sq -> {
+                        try {
+                            PROCESSORS.get("insert").process(queryInfoList, sq);
+                        } catch (AssertionFailedError e) {
+                            errors.add(e);
+                        }
+                    }
+                    case ExpectedUpdateQuery sq -> {
+                        try {
+                            PROCESSORS.get("update").process(queryInfoList, sq);
+                        } catch (AssertionFailedError e) {
+                            errors.add(e);
+                        }
+                    }
+                    case ExpectedDeleteQuery sq -> {
+                        try {
+                            PROCESSORS.get("delete").process(queryInfoList, sq);
+                        } catch (AssertionFailedError e) {
+                            errors.add(e);
+                        }
+                    }
+                    default -> {
+                    }
                 }
+            }
+
+            if (!errors.isEmpty()) {
+                String errorMessage = String.format("Assertion error, expected: %s but got: %s", errors,errors);
+                throw new AssertionFailedError(errorMessage, List.of(), errors);
             }
         });
     }
