@@ -49,9 +49,9 @@
         <datasource.proxy>1.10.1</datasource.proxy>
         <!-- spring version -->
         <spring.version>7.0.0</spring.version>
-        <spring.boot.version>4.0.0</spring.boot.version>
+        <spring.boot.version>4.0.1</spring.boot.version>
         <!-- hibernate version -->
-        <hibernate.version>7.1.8.Final</hibernate.version>
+        <hibernate.version>7.2.0.Final</hibernate.version>
         <!-- test versions -->
         <junit.version>6.0.1</junit.version>
         <mockito.version>5.20.0</mockito.version>
