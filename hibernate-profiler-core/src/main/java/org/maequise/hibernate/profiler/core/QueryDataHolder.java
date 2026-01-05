@@ -10,8 +10,8 @@ import java.util.List;
 /// @param threadName of the current test execution
 /// @param executionInfo coming from [net.ttddyy.dsproxy.listener.QueryExecutionListener]
 /// @param queryInfoList coming from [net.ttddyy.dsproxy.listener.QueryExecutionListener]
-public record QueryInformation(String threadName, ExecutionInfo executionInfo,
-                               List<QueryInfo> queryInfoList) {
+public record QueryDataHolder(String threadName, ExecutionInfo executionInfo,
+                              List<QueryInfo> queryInfoList) {
 
     public List<String> listQueries() {
         return this.queryInfoList.stream().map(QueryInfo::getQuery).toList();

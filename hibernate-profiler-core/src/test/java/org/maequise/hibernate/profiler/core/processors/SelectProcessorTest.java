@@ -5,7 +5,7 @@ import net.ttddyy.dsproxy.QueryInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.maequise.hibernate.profiler.core.QueryInformation;
+import org.maequise.hibernate.profiler.core.QueryDataHolder;
 import org.maequise.hibernate.profiler.core.TestUtils;
 import org.maequise.hibernate.profiler.core.annotations.ExpectedSelectQuery;
 import org.opentest4j.AssertionFailedError;
@@ -31,11 +31,11 @@ class SelectProcessorTest {
     void test_annotation_total_equals_than() {
         when(annotation.value()).thenReturn(2);
 
-        assertDoesNotThrow(() -> processor.process(List.of(new QueryInformation(null,
+        assertDoesNotThrow(() -> processor.process(List.of(new QueryDataHolder(null,
                         null,
                         List.of(new QueryInfo("select ed from ed"),
                                 new QueryInfo("select ed from ed"))),
-                new QueryInformation(null,
+                new QueryDataHolder(null,
                         null,
                         List.of(new QueryInfo("select ed from ed"),
                                 new QueryInfo("select ed from ed")))), annotation));
@@ -46,7 +46,7 @@ class SelectProcessorTest {
     void test_annotation_total_greater_than() {
         when(annotation.value()).thenReturn(3);
 
-        assertThrows(AssertionFailedError.class, () -> processor.process(List.of(new QueryInformation(null,
+        assertThrows(AssertionFailedError.class, () -> processor.process(List.of(new QueryDataHolder(null,
                 null,
                 List.of(new QueryInfo("select ed from ed"),
                         new QueryInfo("select sdf from ed")))), annotation));
@@ -62,7 +62,7 @@ class SelectProcessorTest {
 
         when(queryInfo.getQuery()).thenReturn("select id from test_entity");
 
-        assertDoesNotThrow(() -> processor.process(List.of(new QueryInformation(null,
+        assertDoesNotThrow(() -> processor.process(List.of(new QueryDataHolder(null,
                 null,
                 List.of(queryInfo))), annotation));
     }
@@ -77,7 +77,7 @@ class SelectProcessorTest {
 
         when(queryInfo.getQuery()).thenReturn("select id from test_entity where id = 1");
 
-        assertThrows(AssertionFailedError.class, () -> processor.process(List.of(new QueryInformation(null,
+        assertThrows(AssertionFailedError.class, () -> processor.process(List.of(new QueryDataHolder(null,
                 null,
                 List.of(queryInfo))), annotation));
     }
@@ -92,7 +92,7 @@ class SelectProcessorTest {
 
         when(queryInfo.getQuery()).thenReturn("select id from test_entity where id = 1");
 
-        assertDoesNotThrow(() -> processor.process(List.of(new QueryInformation(null,
+        assertDoesNotThrow(() -> processor.process(List.of(new QueryDataHolder(null,
                 null,
                 List.of(queryInfo))), annotation));
     }
@@ -109,7 +109,7 @@ class SelectProcessorTest {
         when(queryInfo.getQuery()).thenReturn("select next(id) from test_entity_seq");
         when(secondQueryInfo.getQuery()).thenReturn("select id from test_entity");
 
-        assertDoesNotThrow(() -> processor.process(List.of(new QueryInformation(null,
+        assertDoesNotThrow(() -> processor.process(List.of(new QueryDataHolder(null,
                 null,
                 List.of(queryInfo)), createQueryInformation(null, null, secondQueryInfo)), annotation));
     }
@@ -128,7 +128,7 @@ class SelectProcessorTest {
         when(secondQueryInfo.getQuery()).thenReturn("select id from test_entity");
         when(thirdQueryInfo.getQuery()).thenReturn("select id, name, lastname from test_entity");
 
-        assertDoesNotThrow(() -> processor.process(List.of(new QueryInformation(null,
+        assertDoesNotThrow(() -> processor.process(List.of(new QueryDataHolder(null,
                         null,
                         List.of(queryInfo)),
                 createQueryInformation(null, null, secondQueryInfo),
@@ -149,7 +149,7 @@ class SelectProcessorTest {
         when(secondQueryInfo.getQuery()).thenReturn("select id from test_entity");
         when(thirdQueryInfo.getQuery()).thenReturn("select id, name, lastname from test_entity");
 
-        assertThrows(AssertionFailedError.class, () -> processor.process(List.of(new QueryInformation(null,
+        assertThrows(AssertionFailedError.class, () -> processor.process(List.of(new QueryDataHolder(null,
                         null,
                         List.of(queryInfo)),
                 createQueryInformation(null, null, secondQueryInfo),
@@ -170,7 +170,7 @@ class SelectProcessorTest {
         when(secondQueryInfo.getQuery()).thenReturn("select id from test_entity");
         when(thirdQueryInfo.getQuery()).thenReturn("select id, name, lastname from test_entity");
 
-        assertDoesNotThrow(() -> processor.process(List.of(new QueryInformation(null,
+        assertDoesNotThrow(() -> processor.process(List.of(new QueryDataHolder(null,
                         null,
                         List.of(queryInfo)),
                 createQueryInformation(null, null, secondQueryInfo),
@@ -194,7 +194,7 @@ class SelectProcessorTest {
         when(secondQueryInfo.getQuery()).thenReturn("select id from test_entity");
         when(thirdQueryInfo.getQuery()).thenReturn("select id, name, lastname from test_entity");
 
-        assertThrows(AssertionFailedError.class, () -> processor.process(List.of(new QueryInformation(null,
+        assertThrows(AssertionFailedError.class, () -> processor.process(List.of(new QueryDataHolder(null,
                         null,
                         List.of(queryInfo)),
                 createQueryInformation(null, null, secondQueryInfo),
@@ -254,8 +254,8 @@ class SelectProcessorTest {
         verify(annotation).value();
     }
 
-    private QueryInformation createQueryInformation(String methodName, ExecutionInfo executionInfo, QueryInfo queryInfo) {
-        return new QueryInformation(methodName, executionInfo, List.of(queryInfo));
+    private QueryDataHolder createQueryInformation(String methodName, ExecutionInfo executionInfo, QueryInfo queryInfo) {
+        return new QueryDataHolder(methodName, executionInfo, List.of(queryInfo));
     }
 
 }

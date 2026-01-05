@@ -1,6 +1,6 @@
 package org.maequise.hibernate.profiler.core.processors;
 
-import org.maequise.hibernate.profiler.core.QueryInformation;
+import org.maequise.hibernate.profiler.core.QueryDataHolder;
 import org.maequise.hibernate.profiler.core.annotations.ExpectedSelectQuery;
 import org.opentest4j.AssertionFailedError;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /// @since 0.1.0
 public final class SelectProcessor implements Processor {
     @Override
-    public void process(List<QueryInformation> queryInformation, Annotation anno) {
+    public void process(List<QueryDataHolder> queryInformation, Annotation anno) {
         var annot = (ExpectedSelectQuery) anno;
         var queriesStr = new ArrayList<String>();
 
@@ -54,7 +54,7 @@ public final class SelectProcessor implements Processor {
             if(!containsQuery.get()) {
                 throw new AssertionFailedError("Expected SELECT query: " + expectedQuery +
                         " but not found in all queries : "
-                        + totalQueriesData.stream().map(QueryInformation::listQueries).toList());
+                        + totalQueriesData.stream().map(QueryDataHolder::listQueries).toList());
             }
         }
     }
