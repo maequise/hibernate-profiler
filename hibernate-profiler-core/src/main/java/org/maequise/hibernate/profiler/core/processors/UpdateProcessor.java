@@ -1,6 +1,6 @@
 package org.maequise.hibernate.profiler.core.processors;
 
-import org.maequise.hibernate.profiler.core.QueryInformation;
+import org.maequise.hibernate.profiler.core.QueryDataHolder;
 import org.maequise.hibernate.profiler.core.annotations.ExpectedUpdateQuery;
 
 import java.lang.annotation.Annotation;
@@ -13,7 +13,7 @@ import java.util.List;
 /// @since 0.1.0
 public final class UpdateProcessor implements Processor{
     @Override
-    public void process(List<QueryInformation> queryInformation, Annotation annotation) {
+    public void process(List<QueryDataHolder> queryInformation, Annotation annotation) {
         var annot = (ExpectedUpdateQuery) annotation;
         var totalExpected = annot.value();
         var expectedQuery = annot.queryExpected();

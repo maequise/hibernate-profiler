@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.maequise.hibernate.profiler.core.DataSourceHolder;
 import org.maequise.hibernate.profiler.core.ProcessorsConfiguration;
-import org.maequise.hibernate.profiler.core.QueryInformation;
+import org.maequise.hibernate.profiler.core.QueryDataHolder;
 import org.maequise.hibernate.profiler.core.annotations.*;
 import org.maequise.hibernate.profiler.core.processors.Processor;
 import org.opentest4j.AssertionFailedError;
@@ -41,11 +41,11 @@ public class HibernateProfilerExtension implements BeforeEachCallback, AfterEach
     private void processAnnotationsOfTestMethod(String testNameMethod, Method method) {
         boolean isExperimentalActivated = isExperimentalActivated(method);
 
-        Map<String, List<QueryInformation>> connectionsNamed = DataSourceHolder.getConnectionsNamed();
+        Map<String, List<QueryDataHolder>> connectionsNamed = DataSourceHolder.getConnectionsNamed();
         Annotation[] annots = method.getAnnotations();
         List<AssertionFailedError> errors = new ArrayList<>(4);
 
-        List<QueryInformation> queryInfoList = connectionsNamed.get(testNameMethod);
+        List<QueryDataHolder> queryInfoList = connectionsNamed.get(testNameMethod);
 
         for (Annotation annotation : annots) {
             switch (annotation) {
@@ -79,7 +79,7 @@ public class HibernateProfilerExtension implements BeforeEachCallback, AfterEach
         return annotation != null && annotation.value();
     }
 
-    private void processAnnotation(String processorType, final List<QueryInformation> queryInfoList,
+    private void processAnnotation(String processorType, final List<QueryDataHolder> queryInfoList,
                                                 Annotation annotation,
                                                 List<AssertionFailedError> errors, boolean isExperimental) {
         try {

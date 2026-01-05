@@ -4,15 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.maequise.hibernate.profiler.core.DataSourceHolder;
-import org.maequise.hibernate.profiler.core.QueryInformation;
+import org.maequise.hibernate.profiler.core.QueryDataHolder;
 import org.maequise.hibernate.profiler.core.annotations.*;
 import org.opentest4j.AssertionFailedError;
 
-import javax.swing.text.html.Option;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -75,7 +72,7 @@ class WorkflowExtensionTest {
 
         ExtensionContext extensionContext = mock(ExtensionContext.class);
         Method mockMethod = mock(Method.class);
-        DataSourceHolder.addData("expect_the_workflow_continues", new QueryInformation(null, null, List.of()));
+        DataSourceHolder.addData("expect_the_workflow_continues", new QueryDataHolder(null, null, List.of()));
 
         //setup the mocks
         //setup the annotations

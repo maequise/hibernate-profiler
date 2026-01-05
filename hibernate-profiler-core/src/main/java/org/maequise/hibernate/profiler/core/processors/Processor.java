@@ -1,6 +1,6 @@
 package org.maequise.hibernate.profiler.core.processors;
 
-import org.maequise.hibernate.profiler.core.QueryInformation;
+import org.maequise.hibernate.profiler.core.QueryDataHolder;
 import org.opentest4j.AssertionFailedError;
 
 import java.lang.annotation.Annotation;
@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /// @since 0.1.0
 public sealed interface Processor permits SelectProcessor, InsertProcessor, UpdateProcessor, DeleteProcessor {
     /// Method to control the different queries performed with the annotation associated
-    void process(List<QueryInformation> queryInformation, Annotation annotation);
+    void process(List<QueryDataHolder> queryInformation, Annotation annotation);
 
     /// Default method used to share the logic of control for different annotation with the same behavior on controls
     default void controlData(int expectedTotalQuery, String queryToControl, List<String> queries) {
