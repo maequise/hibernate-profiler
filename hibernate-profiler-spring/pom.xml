@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.maequise</groupId>
         <artifactId>hibernate-profiler</artifactId>
-        <version>0.3.1</version>
+        <version>0.3.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>hibernate-profiler-spring</artifactId>
