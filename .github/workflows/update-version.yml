@@ -30,8 +30,8 @@ jobs:
         cache: maven
     - name: Run the update of the version
       run: |
-        mvn versions:set -DnewVersion=${{ github.event.inputs.version }}
+        mvn versions:set -DnewVersion="${{ github.event.inputs.version }}-SNAPSHOT"
         git config --global user.name 'ci-user'
-        git config --global user.email 'maequise@users.noreply.github.com'
-        git commit -am "Automated report"
+        git config --global user.email 'automated@users.noreply.github.com'
+        git commit -am "chore: Update version"
         git push
