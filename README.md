@@ -35,6 +35,11 @@ class RepoTest {
 }
 ```
 
+You also have the possibility to define the `DataSource` you want to proxy by defining a property in the configuration 
+file with the property `datasource.name` and the `ProfilerAutoConfiguration` class will handle how to create the proxy bean to monitor.
+
+By this way a project with multiple `DataSource` can still be tested by choosing the bean to monitor.
+
 It's possible that you hit the following error: 
 
 ```
