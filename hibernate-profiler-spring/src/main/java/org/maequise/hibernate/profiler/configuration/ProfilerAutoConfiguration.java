@@ -7,19 +7,44 @@ import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 import org.hibernate.engine.jdbc.internal.FormatStyle;
 import org.hibernate.engine.jdbc.internal.Formatter;
 import org.maequise.hibernate.profiler.listeners.Listener;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 
 import javax.sql.DataSource;
 
-@Configuration
+@AutoConfiguration
 @Order
-public class ProfilerConfiguration {
+@ConditionalOnBean(DataSource.class)
+public class ProfilerAutoConfiguration {
     @Bean
     @Primary
+    @Conditional(DataSourceCondition.class)
     public DataSource dataSourceProxied(DataSource dataSource) {
+        return createProxiedDataSource(dataSource);
+    }
+
+    @Bean
+    @Primary
+    @ConditionalOnProperty("datasource.name")
+    public DataSource dataSourceNamed(AnnotationConfigApplicationContext context,
+                                      @Value("${datasource.name}") String name) {
+        DataSource namedBean = context.getBean(name, DataSource.class);
+
+        var p = createProxiedDataSource(namedBean);
+
+        context.registerBean("proxied".concat(name),
+                DataSource.class, () -> p);
+        return p;
+    }
+
+    private DataSource createProxiedDataSource(DataSource ds) {
         var chainListeners = new ChainListener();
 
         PrettyQueryEntryCreator creator = new PrettyQueryEntryCreator();
@@ -32,7 +57,7 @@ public class ProfilerConfiguration {
         chainListeners.addListener(new Listener());
 
         return ProxyDataSourceBuilder
-                .create(dataSource)
+                .create(ds)
                 .name("dataSource")
                 .listener(chainListeners)
                 .build();
